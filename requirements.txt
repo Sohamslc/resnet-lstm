@@ -1,3 +1,6 @@
+ipython==8.12.2
+typing_extensions==4.5.0
+tensorflow==2.13.0
 absl-py==2.2.2
 appnope==0.1.4
 asttokens==3.0.0
@@ -76,7 +79,6 @@ six==1.17.0
 stack-data==0.6.3
 tensorboard==2.13.0
 tensorboard-data-server==0.7.2
-tensorflow==2.13.0
 tensorflow-estimator==2.13.0
 termcolor==3.0.1
 threadpoolctl==3.6.0
