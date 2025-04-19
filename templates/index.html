@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto-Caption from Camera</title>
+</head>
+<body>
+  <h1>Taking Photo and Predicting Caption...</h1>
+  <video id="video" width="320" height="240" autoplay></video>
+  <canvas id="canvas" width="224" height="224" style="display:none;"></canvas>
+  <p id="caption"></p>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captionBox = document.getElementById('caption');
+
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        return new Promise(resolve => setTimeout(resolve, 2000)); // wait for camera
+      })
+      .then(() => {
+        // Capture a frame
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, 224, 224);
+
+        // Convert to base64
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        // Send to server
+        fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image_data: imageData })
+        })
+        .then(res => res.json())
+        .then(data => {
+          captionBox.innerText = "Caption: " + data.caption;
+        });
+      })
+      .catch(err => {
+        captionBox.innerText = "Error accessing webcam: " + err;
+      });
+  </script>
+</body>
+</html>
